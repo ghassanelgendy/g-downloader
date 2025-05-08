@@ -183,31 +183,6 @@ The following dependencies are included in the build:
 - Tkinter
 - yt-dlp (detected at runtime)
 
-#### Runtime Behavior
-
-When the executable runs:
-
-1. It checks for yt-dlp in standard locations
-2. Creates download directories if they don't exist
-3. Starts clipboard monitoring
-4. Keeps a hidden Tkinter root window for popup management
-
-### Known Limitations
-
-1. Clipboard access requires PowerShell on Windows
-2. No system tray icon for easy application management
-3. The only way to exit the application is via Task Manager
-4. No progress indicator during downloads
-5. No configuration settings persistence
-
-### Future Development Possibilities
-
-1. Add system tray icon for better user interaction
-2. Implement persistent settings storage
-3. Add download progress indicators
-4. Support for more platforms and URL formats
-5. Custom download location selection
-
 ## License
 
 MIT License
