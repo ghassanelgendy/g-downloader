@@ -35,6 +35,7 @@ options = {
             "re",
             "shutil",
             "io",
+            "base64",  # Add base64 to includes
         ],
         "excludes": [
             "email",
