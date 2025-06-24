@@ -1,0 +1,9 @@
+Pillow>=9.0.0
+requests>=2.25.0
+pystray>=0.19.0
+
+# Note: ffmpeg is also required for video thumbnail generation
+# Install from https://ffmpeg.org/download.html or using package manager:
+# Windows: choco install ffmpeg
+# macOS: brew install ffmpeg
+# Linux: sudo apt install ffmpeg

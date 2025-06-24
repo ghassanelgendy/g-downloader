@@ -1,0 +1,38 @@
+# Build artifacts
+build/
+dist/
+*.spec.bak
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+*.tmp
+
+# User configuration
+.g-downloader-config.json
+.g-downloader-history.json
+
+# Logs
+*.log
+
+# Temporary files
+temp/
+tmp/ 
