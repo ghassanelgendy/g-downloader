@@ -428,6 +428,7 @@ DEFAULT_CONFIG = {
     "notifications_enabled": True,
     "show_thumbnails": False,
     "logging_enabled": False,
+    "start_minimized": False,
 }
 
 
@@ -1168,14 +1169,16 @@ def get_clipboard_text():
 class MainApplication:
     def __init__(self):
         self.root = tk.Tk()
+        
+        # Hide window immediately to prevent flashing
+        self.root.withdraw()
+        
         # Set window icon using ICON_BASE64 (taskbar icon)
         self._temp_icon_path = write_temp_icon()
         try:
             self.root.iconbitmap(self._temp_icon_path)
         except Exception as e:
             log(f"Failed to set iconbitmap: {e}")
-        # Immediately hide the window before any setup to prevent flash
-        # self.root.withdraw()
 
         self.root.title("G-Downloader")
         self.root.geometry("1000x600")
@@ -1183,10 +1186,12 @@ class MainApplication:
         center_window(self.root, 1000, 600)
 
         # Set window icon
-        # Set window icon
         icon_photo = get_icon_photo()
         if icon_photo:
             self.root.iconphoto(True, icon_photo)
+
+        # Handle startup behavior
+        self.should_start_minimized = config.get("start_minimized", False)
 
         # Center the window on screen (for when it's shown later)
         center_window(self.root, 1000, 600)
@@ -1224,9 +1229,16 @@ class MainApplication:
         # Bind window close event
         self.root.protocol("WM_DELETE_WINDOW", self.hide_to_tray)
 
-        # Ensure tray icon is visible (window is already hidden)
-        if self.tray_icon:
-            self.tray_icon.visible = True
+        # Handle final window visibility based on startup preference
+        if self.should_start_minimized:
+            # Keep window hidden and ensure tray icon is visible
+            if self.tray_icon:
+                self.tray_icon.visible = True
+        else:
+            # Show window normally after full initialization
+            self.root.deiconify()
+            if self.tray_icon:
+                self.tray_icon.visible = True
 
     def setup_tray(self):
         """Setup system tray icon"""
@@ -1385,6 +1397,7 @@ class MainApplication:
         )
         self.thumbnail_var = tk.BooleanVar(value=config.get("show_thumbnails", True))
         self.logging_var = tk.BooleanVar(value=config.get("logging_enabled", False))
+        self.start_minimized_var = tk.BooleanVar(value=config.get("start_minimized", False))
 
         # Status frame
         status_frame = ttk.Frame(settings_frame)
@@ -2996,8 +3009,9 @@ class MainApplication:
         self.root.deiconify()
         self.root.lift()
         self.root.focus_force()
+        # Keep tray icon visible for easy access
         if self.tray_icon:
-            self.tray_icon.visible = False
+            self.tray_icon.visible = True
 
     def quit_app(self, icon=None, item=None):
         """Quit the application"""
@@ -3142,6 +3156,7 @@ class MainApplication:
                 self.notifications_var.set(config.get("notifications_enabled", True))
                 self.thumbnail_var.set(config.get("show_thumbnails", True))
                 self.logging_var.set(config.get("logging_enabled", False))
+                self.start_minimized_var.set(config.get("start_minimized", False))
 
                 create_directories()
                 messagebox.showinfo(
@@ -3222,6 +3237,9 @@ class MainApplication:
         ttk.Checkbutton(
             behavior_frame, text="Enable debug logging", variable=self.logging_var
         ).pack(anchor="w", pady=2)
+        ttk.Checkbutton(
+            behavior_frame, text="Start minimized to tray", variable=self.start_minimized_var
+        ).pack(anchor="w", pady=2)
 
         # Buttons
         button_frame = ttk.Frame(prefs_window)
@@ -3237,6 +3255,7 @@ class MainApplication:
             config["notifications_enabled"] = self.notifications_var.get()
             config["show_thumbnails"] = self.thumbnail_var.get()
             config["logging_enabled"] = self.logging_var.get()
+            config["start_minimized"] = self.start_minimized_var.get()
             save_config(config)
             create_directories()
             prefs_window.destroy()
