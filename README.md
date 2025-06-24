@@ -1,5 +1,5 @@
 # G-Downloader Enhanced
-
+![G-Downloader Logo](https://github.com/user-attachments/assets/77e47b81-ab0e-4735-8e79-2c04b09c00cc)
 A modern, feature-rich media downloader for YouTube, Instagram, and TikTok with an advanced GUI interface and intelligent file management.
 
 ## Features
